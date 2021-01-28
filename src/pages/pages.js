@@ -9,4 +9,4 @@ const Pages = () => (
     </Switch>
 )
 
-export default Pages
+export default Pages;
