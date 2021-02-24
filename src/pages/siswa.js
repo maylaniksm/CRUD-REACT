@@ -9,6 +9,7 @@ class Siswa extends React.Component {
         this.state = {  
           token:"",
             siswa: [],
+            jur:[],
             id_siswa:"",
             nis:"",
             nama_siswa:"",
@@ -43,7 +44,7 @@ headerConfig = () => {
             nis:"",
             nama_siswa:"",
             kelas:"",
-            nama_jurusan:"",
+            jurusan:"",
             poin:"",
             search:"",
             action:"",
@@ -57,7 +58,7 @@ headerConfig = () => {
                     nis: item.nis,
                     nama_siswa: item.nama_siswa,
                     kelas: item.kelas,
-                    nama_jurusan: item.nama_jurusan,
+                    jurusan: item.jurusan,
                     poin: item.poin,
                     action: "update",
                     isModalOpen: true
@@ -83,7 +84,7 @@ headerConfig = () => {
             nis: this.state.nis,
             nama_siswa: this.state.nama_siswa,
             kelas: this.state.kelas,
-            nama_jurusan: this.state.nama_jurusan,
+            jurusan: this.state.jurusan,
             poin: this.state.poin
           }
           // mengirim data ke API untuk disimpan pada database
@@ -108,9 +109,22 @@ headerConfig = () => {
           console.log(error);
         });
     }
+    getjurusan = () => {
+      let url = "http://localhost:2000/siswa/jurusan";
+      // mengakses api untuk mengambil data siswa
+      axios.get(url, this.headerConfig())
+      .then(response => {
+        // mengisikan data dari respon API ke array siswa
+        this.setState({jur: response.data.jurusan});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
     componentDidMount(){
         // method yang pertama kali dipanggil pada saat load page
         this.getsiswa()
+        this.getjurusan()
     }
     findsiswa = (event) => {
         let url = "http://localhost:2000/siswa";
@@ -146,7 +160,7 @@ headerConfig = () => {
         }
     }
     render(){
-        console.log(this.state.siswa)
+        console.log(this.state.jur)
         return(
             <>
             <NavBar />
@@ -216,8 +230,11 @@ headerConfig = () => {
                         <input type="text" name="kelas" value={this.state.kelas} onChange={this.bind}  
                         className="form-control" required />  
                         Jurusan
-                        <input type="number" name="nama_jurusan" value={this.state.nama_jurusan} onChange={this.bind}  
-                        className="form-control" required />  
+                            <select name="jurusan" value={this.state.jurusan} onChange={this.bind} className="form-control" required>
+                              {this.state.jur.map((item)=> {  
+                              return ( <option value={item.id_jurusan}>{item.nama_jurusan}</option> )})}
+                            </select>  
+
                         Poin  
                         <input type="number" name="poin" value={this.state.poin} onChange={this.bind}  
                         className="form-control" required />  
